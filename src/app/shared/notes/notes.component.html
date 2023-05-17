@@ -1,0 +1,28 @@
+<body>
+    <div class="left-container">
+        <div class="note-header">
+            <p class="text-btn">Notes</p>
+            <button class="add-btn" (click)="clearNote()">＋</button>
+        </div>
+        <div class="note-header" *ngFor="let list of noteList">
+            <button class="text-btn" (click)="targetNote(list)">{{list.title}}</button>
+            <button class="delete-btn" (click)="removeNote(list)">[X]</button>
+        </div>
+    </div>
+    <div class="right-container">
+        <form class="form-format" [formGroup]="newNote">
+            <div>
+                <label for="form-title"></label>
+                <input class="form-title" id="form-title" type="text" formControlName="title" [(ngModel)]="clickedTitle">
+            </div>
+            <div>
+                <label for="form-body"></label>
+                <textarea class="form-body" id="form-body" formControlName="body" [(ngModel)]="clickedBody"></textarea>
+            </div>
+            <div class="button-container">
+                <button class="revert-btn" type="submit" name="revert" (click)="onRevert()">Revert</button>
+                <button class="save-btn" type="submit" name="save" (click)="onSubmit()">Save</button>
+            </div>
+        </form>
+    </div>
+</body>
