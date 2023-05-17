@@ -13,15 +13,15 @@
         <form class="form-format" [formGroup]="newNote">
             <div>
                 <label for="form-title"></label>
-                <input class="form-title" id="form-title" type="text" formControlName="title" [(ngModel)]="clickedTitle">
+                <input class="form-title" id="form-title" type="text" formControlName="title" (input)="onChange()">
             </div>
             <div>
                 <label for="form-body"></label>
-                <textarea class="form-body" id="form-body" formControlName="body" [(ngModel)]="clickedBody"></textarea>
+                <textarea class="form-body" id="form-body" formControlName="body" (input)="onChange()"></textarea>
             </div>
             <div class="button-container">
-                <button class="revert-btn" type="submit" name="revert" (click)="onRevert()">Revert</button>
-                <button class="save-btn" type="submit" name="save" (click)="onSubmit()">Save</button>
+                <button class="revert-btn" type="submit" name="revert" (click)="onRevert()" [disabled]="disablebtn">Revert</button>
+                <button class="save-btn" type="submit" name="save" (click)="onSubmit()" [disabled]="disablebtn">Save</button>
             </div>
         </form>
     </div>

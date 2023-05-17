@@ -18,6 +18,7 @@ export class NotesComponent {
   clickedTitle!: string;
   clickedBody!: string;
   revertNote!: noteList | null;
+  disablebtn = true;
 
   constructor(private storage: StorageService) { }
 
@@ -26,6 +27,8 @@ export class NotesComponent {
     this.clickedTitle = "";
     this.clickedBody = "";
     this.revertNote = null;
+    this.newNote.reset();
+    this.onChange();
   }
 
   targetNote(note: noteList) {
@@ -33,6 +36,9 @@ export class NotesComponent {
     this.clickedTitle = note.title;
     this.clickedBody = note.body;
     this.revertNote = { title: note.title, body: note.body };
+    this.newNote.controls['title'].setValue(note.title);
+    this.newNote.controls['body'].setValue(note.body);
+    this.onChange();
   }
 
   removeNote(note: noteList) {
@@ -42,26 +48,40 @@ export class NotesComponent {
   }
 
   onRevert() {
-    this.clickedTitle = this.revertNote!.title;
-    this.clickedBody = this.revertNote!.body;
+    this.newNote.controls['title'].setValue(this.revertNote!.title);
+    this.newNote.controls['body'].setValue(this.revertNote!.body);
+    this.onChange();
     alert('Note was reverted');
   }
 
-  onSubmit() {
-    const tempNote: noteList = {
-      title: this.newNote.value.title,
-      body: this.newNote.value.body,
-    };
+  onChange() {
+    const changeTitle = this.newNote.controls['title'].value !== this.clickedTitle;
+    const changeBody = this.newNote.controls['body'].value !== this.clickedBody;
 
-    const exist = this.noteList.findIndex(ele => ele.title === tempNote.title);
-    if (exist != -1) {
-      this.noteList[exist] = tempNote;
-      alert('Note updated!');
+    if (changeTitle || changeBody) {
+      this.disablebtn = false;
     } else {
-      this.noteList.push(tempNote);
-      alert('Note was saved');
+      this.disablebtn = true;
     }
-    this.storage.setNote('notes', this.noteList);
+  }
+
+  onSubmit() {
+    if (!this.disablebtn) {
+      const tempNote: noteList = {
+        title: this.newNote.value.title,
+        body: this.newNote.value.body,
+      };
+      
+      const exist = this.noteList.findIndex(ele => ele.title === tempNote.title);
+      if (exist != -1) {
+        this.noteList[exist] = tempNote;
+        alert('Note was updated with same title');
+      } else {
+        this.noteList.push(tempNote);
+        alert('Note was saved');
+      }
+      this.storage.setNote('notes', this.noteList);
+    }
     this.clearNote();
   }
 
